@@ -1,0 +1,13 @@
+Prius Platform Third Party Projects Notice
+
+PatternFly:
+This product includes code based on the template project
+Red Hat PatternFly patternfly-react-seed under MIT license.
+https://github.com/patternfly/patternfly-react-seed/blob/main/LICENSE
+
+Quarkus:
+This product includes code based on the Quarkus Project sponsored by Red Hat.
+Quarkus is open source. All dependencies of this project are available under
+the Apache Software License 2.0 or compatible license.
+https://github.com/quarkusio/quarkus/blob/main/LICENSE.txt
+
