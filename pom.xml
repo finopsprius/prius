@@ -1,0 +1,268 @@
+<?xml version="1.0"?>
+<!-- Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
+file except in compliance with the License. You may obtain a copy of the License at
+https://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or
+agreed to in writing, software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and limitations
+under the License. -->
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <description>Prius Platform Project</description>
+
+    <groupId>org.apache.prius</groupId>
+    <artifactId>prius</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>prius-manager</module>
+        <module>prius-assembly</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven-checkstyle-plugin-version>3.1.0</maven-checkstyle-plugin-version>
+        <com-puppycrawl-tools-version>8.29</com-puppycrawl-tools-version>
+        <maven-clean-plugin-version>3.1.0</maven-clean-plugin-version>
+        <apache-rat-plugin-version>0.13</apache-rat-plugin-version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.prius</groupId>
+                <artifactId>prius-manager</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <!-- Configures plugins that are actually referenced within the
+             plugins element in the children's POMs or in the current POM -->
+        <pluginManagement>
+            <plugins>
+                <!--
+                  Check Style Maven Plugin Definition
+                -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${maven-checkstyle-plugin-version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>${com-puppycrawl-tools-version}</version>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <!--
+               Delete additional files not exposed to Maven
+            -->
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>${maven-clean-plugin-version}</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>prius-manager/src/main/webapp/node_modules</directory>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                        <fileset>
+                            <directory>prius-manager/src/main/webapp/dist</directory>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                        <fileset>
+                            <directory>prius-manager/src/main/resources/META-INF/resources</directory>
+                            <includes>
+                                <include>**/*</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/.gitignore</exclude>
+                            </excludes>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <!--
+                Check Style Maven Plugin Configuration
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <checkstyleRules>
+                        <module name="Checker">
+                            <property name="charset" value="UTF-8" />
+                            <property name="severity" value="warning" />
+                            <!-- Checks for whitespace -->
+                            <!-- See http://checkstyle.sf.net/config_whitespace.html -->
+                            <module name="FileTabCharacter">
+                                <property name="eachLine" value="true" />
+                            </module>
+                            <module name="LineLength">
+                                <!-- needs extra, because Eclipse formatter
+                                    ignores the ending left brace -->
+                                <property name="max" value="200" />
+                                <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://" />
+                            </module>
+                            <module name="TreeWalker">
+                                <module name="RegexpSinglelineJava">
+                                    <property name="format" value="\s+$" />
+                                    <property name="message" value="Line has trailing whitespace." />
+                                </module>
+                                <module name="RegexpSinglelineJava">
+                                    <!--suppress UnresolvedMavenProperty -->
+                                    <property name="format" value="[@]see\s+[{][@]link" />
+                                    <!--suppress UnresolvedMavenProperty -->
+                                    <property name="message" value="Javadoc @see does not need @link: pick one or the other." />
+                                </module>
+                                <module name="OuterTypeFilename" />
+                                <module name="AvoidStarImport" />
+                                <module name="UnusedImports">
+                                    <property name="processJavadoc" value="true" />
+                                </module>
+                                <module name="NoLineWrap" />
+                                <module name="LeftCurly" />
+                                <module name="RightCurly" />
+                                <module name="RightCurly">
+                                    <property name="option" value="alone_or_singleline" />
+                                    <property name="tokens" value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, STATIC_INIT" />
+                                </module>
+                                <module name="SeparatorWrap">
+                                    <property name="tokens" value="DOT" />
+                                    <property name="option" value="nl" />
+                                </module>
+                                <module name="SeparatorWrap">
+                                    <property name="tokens" value="COMMA" />
+                                    <property name="option" value="EOL" />
+                                </module>
+                                <module name="PackageName">
+                                    <property name="format" value="^[a-z]+(\.[a-z][a-zA-Z0-9]*)*$" />
+                                </module>
+                                <module name="MethodTypeParameterName">
+                                    <property name="format" value="(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*[T]$)" />
+                                </module>
+                                <module name="MethodParamPad" />
+                                <module name="OperatorWrap">
+                                    <property name="option" value="NL" />
+                                    <property name="tokens" value="BAND, BOR, BSR, BXOR, DIV, EQUAL, GE, GT, LAND, LE, LITERAL_INSTANCEOF, LOR, LT, MINUS, MOD, NOT_EQUAL, QUESTION, SL, SR, STAR " />
+                                </module>
+                                <module name="AnnotationLocation">
+                                    <property name="tokens" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF" />
+                                </module>
+                                <module name="AnnotationLocation">
+                                    <property name="tokens" value="VARIABLE_DEF" />
+                                    <property name="allowSamelineMultipleAnnotations" value="true" />
+                                </module>
+                                <module name="NonEmptyAtclauseDescription" />
+                                <module name="JavadocMethod">
+                                    <property name="allowMissingParamTags" value="true" />
+                                    <property name="allowMissingReturnTag" value="true" />
+                                    <property name="allowedAnnotations" value="Override,Test,BeforeClass,AfterClass,Before,After" />
+                                </module>
+                                <module name="SingleLineJavadoc" />
+                            </module>
+                        </module>
+                    </checkstyleRules>
+                    <violationSeverity>warning</violationSeverity>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                </configuration>
+            </plugin>
+            <!--
+                Apache Rat release audit tool plugin
+            -->
+            <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+                <version>${apache-rat-plugin-version}</version>
+                <configuration>
+                    <excludeSubProjects>false</excludeSubProjects>
+                    <consoleOutput>true</consoleOutput>
+                    <useIdeaDefaultExcludes>true</useIdeaDefaultExcludes>
+                    <parseSCMIgnoresAsExcludes>true</parseSCMIgnoresAsExcludes>
+                    <excludes>
+                        <exclude>**/*.svg</exclude> 
+                        <exclude>**/node_modules/**</exclude>
+                        <exclude>**/banner.txt</exclude>
+                        <exclude>**/.empty</exclude>
+                        <exclude>**/*.json</exclude>
+                        <exclude>**/target/**</exclude>
+                        <exclude>**/.settings/**</exclude>
+                        <exclude>**/.prettierrc/**</exclude>
+                        <exclude>**/.dockerignore/**</exclude>
+                        <exclude>**/*.drawio</exclude>
+                        <exclude>**/META-INF/**</exclude>
+                        <exclude>**/dist/**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <!-- 
+            Checks style and licensing requirements. This is a good
+            idea to run for contributions and for the release process. While it would
+            be nice to run always these plugins can considerably slow the build.
+        -->
+        <profile>
+            <id>contrib-check</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.rat</groupId>
+                        <artifactId>apache-rat-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <phase>verify</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>check-style</id>
+                                <phase>verify</phase>
+                                <configuration>
+                                    <encoding>UTF-8</encoding>
+                                    <excludes>**/generated-sources/**/*</excludes>
+                                    <sourceDirectories>
+                                        <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+                                        <sourceDirectory>${project.build.testSourceDirectory}</sourceDirectory>
+                                    </sourceDirectories>
+                                </configuration>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
