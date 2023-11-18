@@ -19,7 +19,7 @@ under the License. -->
     </description>
 
     <parent>
-        <groupId>org.apache.prius</groupId>
+        <groupId>org.finopsprius.prius</groupId>
         <artifactId>prius</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>

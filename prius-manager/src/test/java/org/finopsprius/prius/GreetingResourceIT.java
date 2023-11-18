@@ -1,4 +1,4 @@
-package org.acme;
+package org.finopsprius.prius;
 
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 
