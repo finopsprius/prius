@@ -5,7 +5,7 @@ A single pane of glass for the FinOps Framework.
 
 | Technology | Version |
 | ---------- |---------|
-| Quarkus    | 3.5.0   |
+| Quarkus    | 3.5.3   |
 | JDK        | 17.0.9  |
 | PatternFly | 5.1.0   |
 | Node.js    | 18.12.1 |
