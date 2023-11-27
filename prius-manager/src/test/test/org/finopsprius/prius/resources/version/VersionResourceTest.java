@@ -1,4 +1,4 @@
-package org.finopsprius.prius;
+package org.finopsprius.prius.resources.version;
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
@@ -7,7 +7,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 
 @QuarkusTest
-public class GreetingResourceTest {
+public class VersionResourceTest {
 
     @Test
     public void testHelloEndpoint() {

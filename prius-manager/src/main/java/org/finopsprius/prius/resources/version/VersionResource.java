@@ -1,4 +1,4 @@
-package org.finopsprius.prius;
+package org.finopsprius.prius.resources.version;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -6,7 +6,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
 @Path("/hello")
-public class GreetingResource {
+public class VersionResource {
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)

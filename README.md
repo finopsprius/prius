@@ -1,6 +1,17 @@
 # The FinOps UI Prius Project
 A single pane of glass for the FinOps Framework.
 
+## Core Versions
+
+| Technology | Version |
+| ---------- |---------|
+| Quarkus    | 3.5.0   |
+| JDK        | 17.0.9  |
+| PatternFly | 5.1.0   |
+| Node.js    | 18.12.1 |
+| React.js   | 18      |
+| Go         | 1.19.5  |
+
 ---
 <sub>
 Copyright 2023 Javi Roman
