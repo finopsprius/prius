@@ -17,6 +17,8 @@ package org.finopsprius.prius;
 
 import io.quarkus.runtime.ShutdownEvent;
 import io.quarkus.runtime.StartupEvent;
+import jakarta.transaction.Transactional;
+import org.finopsprius.prius.bootstrap.FirstBoot;
 import org.jboss.logging.Logger;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -24,14 +26,20 @@ import jakarta.enterprise.event.Observes;
 
 @ApplicationScoped
 public class AppLifecycleBean {
-    private static final Logger LOGGER = Logger.getLogger("ListenerBean");
+    private static final Logger LOGGER = Logger.getLogger("PriusLogger");
 
     void onStart(@Observes StartupEvent ev) {
         System.out.println("Prius Platform starting...");
 
+        firstBootInitializeTables();
+
         LOGGER.info("The application is starting...");
     }
 
+    @Transactional
+    void firstBootInitializeTables(){
+        FirstBoot.initializeTables();
+    }
 
     void onStop(@Observes ShutdownEvent ev) {
         System.out.println("Prius Platform stopping...");
