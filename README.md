@@ -3,14 +3,14 @@ A single pane of glass for the FinOps Framework.
 
 ## Core Versions
 
-| Technology | Version |
-| ---------- |---------|
-| Quarkus    | 3.5.3   |
-| JDK        | 17.0.9  |
-| PatternFly | 5.1.0   |
-| Node.js    | 18.12.1 |
-| React.js   | 18      |
-| Go         | 1.19.5  |
+| Technology | Version                                                                              |
+| ---------- |--------------------------------------------------------------------------------------|
+| Quarkus    | [3.6.0](https://quarkus.io/blog/quarkus-3-6-0-released/)                             |
+| JDK        | [Temurin-17.0.9+9](https://adoptium.net/temurin/release-notes/?version=jdk-17.0.9+9) |
+| PatternFly | [5.1.0](https://www.patternfly.org/get-started/release-highlights#patternfly-5.1)    |
+| Node.js    | [18.12.1](https://nodejs.org/en/blog/release/v18.12.1)                               |
+| React.js   | [18](https://react.dev/blog/2022/03/29/react-v18)                                    |
+| Go         | [1.19.5](https://go.dev/doc/devel/release#go1.19)                                    |
 
 ---
 <sub>

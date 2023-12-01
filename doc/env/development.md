@@ -82,6 +82,66 @@ nvm use prius
 Now using node v18.12.1 (npm v8.19.2)
 ```
 
+### Go
+
+#### Vanilla Go without package manager
+
+[Go Downloads](https://go.dev/dl/)
+```
+curl -LO https://go.dev/dl/go1.18.6.linux-amd64.tar.gz
+tar xvzf go1.18.6.linux-amd64.tar.gz -C $HOME/.local/share
+mkdir -p $HOME/go/{bin,pkg,src}
+export PATH=$PATH:$HOME/.local/share/go/bin
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+```
+
+#### Go with a package manager
+
+We can install Go versions with Go Version Manager:
+[GVM](https://github.com/moovweb/gvm)
+
+```
+bash < <(curl -s -S -L \
+    https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)
+source ~/.gvm/scripts/gvm
+gvm version
+Go Version Manager v1.0.22 installed at ...
+
+$ gvm listall
+$ gvm install go1.7.3 -B
+Installing go1.7.3 from binary source
+
+$ gvm list
+gvm gos (installed)
+   go1.7.3
+   system
+
+$ gvm use go1.7.3
+Now using version go1.7.3
+
+$ which go
+~/.gvm/gos/go1.7.3/bin/go
+
+$ gvm use system
+Now using version system
+
+$ which go
+/usr/lib/golang/bin/go
+$ go env
+...
+GOPATH="${HOME}/.gvm/pkgsets/go1.7.3/global"
+...
+
+$ gvm use go1.7.3 --default
+Now using version go1.7.3
+
+$ gvm list
+gvm gos (installed)
+=> go1.7.3
+   system
+```
+
 ---
 <sub>
 Copyright 2023 Javi Roman
