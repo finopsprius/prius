@@ -7,6 +7,7 @@ Prius Platform Documentation
 ## Development Notes
 
 * [Setup Development Environment](env/development.md)
+* [Quarkus Notes](env/quarkus.md)
 * [Github Workflow](env/prius-github-flow.md)
 
 ---
