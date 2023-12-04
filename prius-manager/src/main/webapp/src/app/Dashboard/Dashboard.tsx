@@ -14,12 +14,53 @@
  *  limitations under the License.
  */
 import * as React from 'react';
-import { PageSection, Title } from '@patternfly/react-core';
+import {
+  EmptyState,
+  EmptyStateVariant,
+  PageSection,
+  Spinner,
+  Title} from '@patternfly/react-core';
+import Cookies from 'js-cookie';
+import {AppLogin} from "@app/AppLogin/AppLogin";
 
-const Dashboard: React.FunctionComponent = () => (
-  <PageSection>
-    <Title headingLevel="h1" size="lg">Dashboard Page Title!</Title>
-  </PageSection>
-)
+const Dashboard: React.FunctionComponent = () => {
+  const [isLoged, setIsLoged] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const onHandleLogin = (value) => {
+    setIsLoged(value);
+  }
+
+  React.useEffect(() => {
+    let value = {};
+    value = Cookies.getJSON('prius-auth');
+    if (value) {
+      setIsLoged(true);
+    } else {
+      setIsLoading(true);
+      setIsLoged(false);
+      location.reload();
+    }
+  }, []);
+
+  return (
+    isLoading ?
+      <EmptyState variant={EmptyStateVariant.full}>
+        <Spinner/>
+      </EmptyState>
+    : ! isLoged ?
+        <AppLogin handleLogin={onHandleLogin}/>
+    :
+      <>
+
+        <PageSection>
+          <Title headingLevel="h1" size="lg">
+            Dashboard Page Title
+          </Title>
+        </PageSection>
+
+      </>
+  )
+}
 
 export { Dashboard };

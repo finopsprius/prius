@@ -22,16 +22,10 @@ import {
   ListItem
 } from '@patternfly/react-core';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/js/icons/exclamation-circle-icon';
-import brandImg from '!!url-loader!@app/bgimages/kubernetes-big-data-eg.svg';
+import brandImg from '!!url-loader!@app/bgimages/Patternfly-Logo.svg';
 import Cookies from 'js-cookie';
 
-class AppLogin extends React.Component <{}, { [key: string]: any}>  {
-  private handleUsernameChange: (value) => void;
-  private handlePasswordChange: (passwordValue) => void;
-  private onRememberMeClick: () => void;
-  private parseJwt: (token) => (any | null);
-  private onLoginButtonClick: (event) => void;
-  private handleLoging()
+class AppLogin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,11 +38,11 @@ class AppLogin extends React.Component <{}, { [key: string]: any}>  {
       alreadyLoged: false
     };
 
-    this.handleUsernameChange = value => {
+   this.handleUsernameChange = (_event: React.FormEvent<HTMLInputElement>, value: string) => {
       this.setState({ usernameValue: value });
     };
 
-    this.handlePasswordChange = passwordValue => {
+    this.handlePasswordChange = (_event: React.FormEvent<HTMLInputElement>, passwordValue: string) => {
       this.setState({ passwordValue });
     };
 
@@ -64,7 +58,7 @@ class AppLogin extends React.Component <{}, { [key: string]: any}>  {
       }
     };
 
-    this.onLoginButtonClick = event => {
+    this.onLoginButtonClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       event.preventDefault();
       this.setState({ isValidUsername: !!this.state.usernameValue });
       this.setState({ isValidPassword: !!this.state.passwordValue });
@@ -89,8 +83,9 @@ class AppLogin extends React.Component <{}, { [key: string]: any}>  {
         const content = await rawResponse.json();
 
         if (rawResponse.status == 200) {
-          Cookies.set('tamer-auth', content);
-          let json = this.parseJwt(Cookies.getJSON('tamer-auth').access_token);
+          Cookies.set('prius-auth', content);
+          let json = this.parseJwt(Cookies.getJSON('prius-auth').access_token);
+          console.log(Cookies.getJSON('prius-auth'));
 
           const rawResponse2 =
             await fetch(window.location.protocol +
@@ -106,7 +101,7 @@ class AppLogin extends React.Component <{}, { [key: string]: any}>  {
             });
 
           const group = await rawResponse2.json();
-          Cookies.set('tamer-userinfo', group)
+          Cookies.set('prius-userinfo', group)
 
           this.props.handleLogin(true, json);
         } else {
@@ -118,7 +113,7 @@ class AppLogin extends React.Component <{}, { [key: string]: any}>  {
 
   public componentDidMount(): void {
     let value = {};
-    value = Cookies.getJSON('tamer-auth');
+    value = Cookies.getJSON('prius-auth');
     if (value) {
       this.setState({ alreadyLoged: true });
     } else {
@@ -158,6 +153,7 @@ class AppLogin extends React.Component <{}, { [key: string]: any}>  {
       <LoginForm
         showHelperText={this.state.showHelperText}
         helperText={helperText}
+        helperTextIcon={<ExclamationCircleIcon />}
         usernameLabel="Username"
         usernameValue={this.state.usernameValue}
         onChangeUsername={this.handleUsernameChange}
@@ -171,6 +167,7 @@ class AppLogin extends React.Component <{}, { [key: string]: any}>  {
         isRememberMeChecked={this.state.isRememberMeChecked}
         onChangeRememberMe={this.onRememberMeClick}
         onLoginButtonClick={this.onLoginButtonClick}
+        loginButtonLabel="Log in"
       />
     );
 
@@ -186,20 +183,20 @@ class AppLogin extends React.Component <{}, { [key: string]: any}>  {
       this.state.alreadyLoged?
         false
         :
-      <LoginPage
-        //footerListVariants="inline"
-        brandImgSrc={brandImg}
-        brandImgAlt="PatternFly logo"
-        backgroundImgSrc={images}
-        backgroundImgAlt="Images"
-        footerListItems={listItem}
-        textContent="This is placeholder text only. Use this area to place any information or introductory message about your application that may be relevant to users."
-        loginTitle="Log in to your account"
-        loginSubtitle="Please use mock server backend credentials users.json"
-        forgotCredentials={forgotCredentials}>
-        {loginForm}
-      </LoginPage>
-    )
+        <LoginPage
+          //footerListVariants="inline"
+          brandImgSrc={brandImg}
+          brandImgAlt="PatternFly logo"
+          backgroundImgSrc={images}
+          footerListItems={listItem}
+          textContent="This is placeholder text only. Use this area to place any information or introductory message about your application that may be relevant to users."
+          loginTitle="Log in to your account"
+          loginSubtitle="Please use mock server backend credentials users.json"
+          forgotCredentials={forgotCredentials}
+        >
+          {loginForm}
+        </LoginPage>
+    );
   }
 }
 
