@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 import * as React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useHistory } from 'react-router-dom';
 import {
   NavExpandable,
   Brand,
@@ -64,7 +64,7 @@ import {
   SearchInput,
   Tooltip, Avatar
 } from '@patternfly/react-core';
-import { IAppRoute, IAppRouteGroup, routes } from '@app/routes';
+import { IAppRoute, IAppRouteGroup, generateRoutes } from '@app/routes';
 import logo from '@app/bgimages/Patternfly-Logo.svg';
 //import { BarsIcon } from '@patternfly/react-icons';
 import { Link } from '@reach/router';
@@ -90,13 +90,15 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   const [isKebabDropdownOpen, setIsKebabDropdownOpen] = React.useState(false);
   const [isFullKebabDropdownOpen, setIsFullKebabDropdownOpen] = React.useState(false);
   const [activeItem, setActiveItem] = React.useState(1);
-
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const [refFullOptions, setRefFullOptions] = React.useState<Element[]>();
   const [favorites, setFavorites] = React.useState<string[]>([]);
   const [filteredIds, setFilteredIds] = React.useState<string[]>(['*']);
   const menuRef = React.useRef<HTMLDivElement>(null);
   const toggleRef = React.useRef<HTMLButtonElement>(null);
+  const [isLoged, setIsLoged] = React.useState(false);
+  const [isUser, setIsUser] = React.useState("anonymous");
+  const history = useHistory();
 
   const onNavSelect = (_event: React.FormEvent<HTMLInputElement>, selectedItem: NavOnSelectProps) => {
     typeof selectedItem.itemId === 'number' && setActiveItem(selectedItem.itemId);
@@ -159,6 +161,14 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   };
 
   React.useEffect(() => {
+    let value = {};
+    value = Cookies.getJSON('prius-userinfo');
+    if (value) {
+      setIsLoged(true);
+      // @ts-ignore
+      setIsUser(value.username);
+    }
+    console.log("JAVII")
     window.addEventListener('keydown', handleMenuKeys);
     window.addEventListener('click', handleClickOutside);
 
@@ -167,6 +177,31 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
       window.removeEventListener('click', handleClickOutside);
     };
   }, [isOpen, menuRef]);
+
+  /*
+  function LogoImg() {
+    const history = useHistory();
+    function handleClick() {
+      history.push('/');
+    }
+    return (
+      <img src={logo} onClick={handleClick} alt="Tamer Logo" />
+    );
+  }
+   */
+
+  function dropDownOptions(history) {
+    const logout = () => {
+      Cookies.remove('prius-auth');
+      // Reload page for activating login logic
+      window.location.reload();
+      // avoid other user landing in a non-exits location
+      history.push("/");
+    };
+    return { logout };
+  }
+
+  const { logout } = dropDownOptions(history);
 
   const toggle = (
     <MenuToggle
@@ -393,7 +428,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
     <>
       <DropdownItem key="group 2 profile">My profile</DropdownItem>
       <DropdownItem key="group 2 user">User management</DropdownItem>
-      <DropdownItem key="group 2 logout">Logout</DropdownItem>
+      <DropdownItem key="group 2 logout" onClick={logout}>Logout</DropdownItem>
     </>
   ];
 
@@ -480,7 +515,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
                 isExpanded={isDropdownOpen}
                 icon={<Avatar src={imgAvatar} alt="" />}
               >
-                Ned Username
+                {isUser}
               </MenuToggle>
             )}
           >
@@ -531,7 +566,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   const Navigation = (
     <Nav id="nav-primary-simple" theme="dark">
       <NavList id="nav-list-simple">
-        {routes.map(
+        {generateRoutes().map(
           (route, idx) => route.label && (!route.routes ? renderNavItem(route, idx) : renderNavGroup(route, idx))
         )}
       </NavList>
