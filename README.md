@@ -12,6 +12,7 @@ A single pane of glass for the FinOps Framework.
 | React.js   | [18](https://react.dev/blog/2022/03/29/react-v18)                                    |
 | Go         | [1.19.5](https://go.dev/doc/devel/release#go1.19)                                    |
 
+
 ---
 <sub>
 Copyright 2023 Javi Roman
